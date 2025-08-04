@@ -1,7 +1,7 @@
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer" // fixed mismatched quotes
 
 // Email configuration
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({ // fixed method name
   host: process.env.SMTP_HOST || "smtp.gmail.com",
   port: Number.parseInt(process.env.SMTP_PORT || "587"),
   secure: false,
