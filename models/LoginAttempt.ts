@@ -14,12 +14,10 @@ const LoginAttemptSchema = new Schema<ILoginAttempt>({
     type: String,
     required: true,
     lowercase: true,
-    index: true,
   },
   ipAddress: {
     type: String,
     required: true,
-    index: true,
   },
   userAgent: {
     type: String,
@@ -28,7 +26,6 @@ const LoginAttemptSchema = new Schema<ILoginAttempt>({
   success: {
     type: Boolean,
     required: true,
-    index: true,
   },
   failureReason: {
     type: String,
@@ -37,16 +34,13 @@ const LoginAttemptSchema = new Schema<ILoginAttempt>({
   attemptedAt: {
     type: Date,
     default: Date.now,
-    index: true,
   },
 })
 
-// Indexes for better performance
+// Create indexes separately
 LoginAttemptSchema.index({ email: 1, attemptedAt: -1 })
 LoginAttemptSchema.index({ ipAddress: 1, attemptedAt: -1 })
 LoginAttemptSchema.index({ success: 1, attemptedAt: -1 })
-
-// TTL index to automatically delete old login attempts after 30 days
 LoginAttemptSchema.index({ attemptedAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 })
 
 export const LoginAttempt =

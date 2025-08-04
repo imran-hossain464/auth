@@ -14,12 +14,10 @@ const SecurityEventSchema = new Schema<ISecurityEvent>({
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    index: true,
   },
   eventType: {
     type: String,
     required: true,
-    index: true,
     enum: [
       "USER_REGISTERED",
       "LOGIN_SUCCESS",
@@ -33,6 +31,7 @@ const SecurityEventSchema = new Schema<ISecurityEvent>({
       "SUSPICIOUS_ACTIVITY",
       "RATE_LIMIT_EXCEEDED",
       "REGISTRATION_DUPLICATE_EMAIL",
+      "EMAIL_VERIFICATION_FAILED",
     ],
   },
   description: {
@@ -42,7 +41,6 @@ const SecurityEventSchema = new Schema<ISecurityEvent>({
   ipAddress: {
     type: String,
     required: true,
-    index: true,
   },
   userAgent: {
     type: String,
@@ -53,16 +51,13 @@ const SecurityEventSchema = new Schema<ISecurityEvent>({
   createdAt: {
     type: Date,
     default: Date.now,
-    index: true,
   },
 })
 
-// Indexes for better performance
+// Create indexes separately
 SecurityEventSchema.index({ userId: 1, createdAt: -1 })
 SecurityEventSchema.index({ eventType: 1, createdAt: -1 })
 SecurityEventSchema.index({ ipAddress: 1, createdAt: -1 })
-
-// TTL index to automatically delete old security events after 90 days
 SecurityEventSchema.index({ createdAt: 1 }, { expireAfterSeconds: 90 * 24 * 60 * 60 })
 
 export const SecurityEvent =
